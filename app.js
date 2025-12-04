@@ -44,12 +44,14 @@ tasklist.addEventListener("click", (event) =>{
 function deleteTask(taskItem){
     if(confirm("Estas seguro?")){
         taskItem.remove();
+        removeFromLocalStorage();
     }
 }
 function editTask(taskItem){
     const newTask = prompt("Aver que quieres editar:", taskItem.firstChild.textContent);
     if(newTask!== null){
         taskItem.firstChild.textContent = newTask;
+        updateLocalStorafe();
     }
 }
 
@@ -64,5 +66,17 @@ function loadTasks(){
     const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
     tasks.forEach((task) => {
         tasklist.appendChild(createTaskElement(task))
-    })
+    });
+}
+
+function updateLocalStorafe(){
+   const tasks = Array.from(tasklist.querySelectorAll("li")).map( (li) => li.firstChild.textContent);
+   localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+function removeFromLocalStorage(taskContent){
+    const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+
+    const updateTasks = tasks.filter((task) => task != taskContent);
+
+    localStorage.setItem("tasks", JSON.stringify(updateTasks));
 }
